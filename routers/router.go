@@ -30,3 +30,8 @@ func InitRouter() *gin.Engine {
 
 	return r
 }
+
+/*
+提交POST请求
+http://127.0.0.1:8000/api/v1/tags?name=1&state=1&created_by=test
+*/
