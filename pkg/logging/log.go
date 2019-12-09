@@ -34,7 +34,7 @@ func init() {
 	F = openLogFile(filePath)
 
 	logger = log.New(F, DefaultPrefix, log.LstdFlags)
-	fmt.Print("logger is:", logger)
+	// fmt.Print("logger is:", logger)
 }
 
 func Debug(v ...interface{}) {

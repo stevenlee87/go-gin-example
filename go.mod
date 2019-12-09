@@ -3,6 +3,7 @@ module github.com/stevenlee87/go-gin-example
 go 1.13
 
 require (
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/astaxie/beego v1.12.0
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -17,7 +18,8 @@ require (
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/mailru/easyjson v0.7.0 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
-	github.com/swaggo/swag v1.6.3 // indirect
+	github.com/swaggo/gin-swagger v1.2.0
+	github.com/swaggo/swag v1.6.3
 	github.com/unknwon/com v1.0.1
 	github.com/urfave/cli v1.22.2 // indirect
 	golang.org/x/net v0.0.0-20191204025024-5ee1b9f4859a // indirect
