@@ -83,3 +83,9 @@ func ExistTagByID(id int) bool {
 //
 //	return nil
 //}
+
+func CleanAllTag() bool {
+	db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{}) // 硬删除要使用 Unscoped()，这是 GORM 的约定
+
+	return true
+}
