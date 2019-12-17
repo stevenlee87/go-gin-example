@@ -90,3 +90,18 @@ func MustOpen(fileName, filePath string) (*os.File, error) {
 
 	return f, nil
 }
+
+/*
+在这里我们一共封装了 7个 方法
+
+GetSize：获取文件大小
+GetExt：获取文件后缀
+CheckExist：检查文件是否存在
+CheckPermission：检查文件权限
+IsNotExistMkDir：如果不存在则新建文件夹
+MkDir：新建文件夹
+Open：打开文件
+在这里我们用到了 mime/multipart 包，它主要实现了 MIME 的 multipart 解析，主要适用于 HTTP 和常见浏览器生成的 multipart 主体
+
+multipart 又是什么，rfc2388 的 multipart/form-data 了解一下
+*/
