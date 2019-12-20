@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"github.com/stevenlee87/go-gin-example/models"
+	"github.com/stevenlee87/go-gin-example/pkg/gredis"
 	"github.com/stevenlee87/go-gin-example/pkg/logging"
 
 	"github.com/fvbock/endless"
@@ -30,6 +31,7 @@ func main() {
 	setting.Setup()
 	models.Setup()
 	logging.Setup()
+	gredis.Setup()
 
 	endless.DefaultReadTimeOut = setting.ServerSetting.ReadTimeout
 	endless.DefaultWriteTimeOut = setting.ServerSetting.WriteTimeout
