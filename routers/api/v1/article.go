@@ -101,7 +101,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	articles, err := articleService.GetAll()
-	// fmt.Print("articles is:", articles)
+	fmt.Print("articles is:", articles)
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR_GET_ARTICLES_FAIL, nil)
 		return
@@ -211,8 +211,8 @@ func EditArticle(c *gin.Context) {
 		appG.Response(httpCode, errCode, nil)
 		return
 	}
-	fmt.Printf("form.tagid:%d，title:%s, desc:%s, content:%s, img_url:%s, modified:%s, state:%d", form.TagID,
-		form.Title, form.Desc, form.Content, form.CoverImageUrl, form.ModifiedBy, form.State)
+	//fmt.Printf("form.tagid:%d，title:%s, desc:%s, content:%s, img_url:%s, modified:%s, state:%d", form.TagID,
+	//	form.Title, form.Desc, form.Content, form.CoverImageUrl, form.ModifiedBy, form.State)
 	articleService := article_service.Article{
 		ID:            form.ID,
 		TagID:         form.TagID,

@@ -43,6 +43,15 @@ func (a *Article) Add() error {
 }
 
 func (a *Article) Edit() error {
+	cache := cache_service.Article{ID: a.ID}
+	key := cache.GetArticleKey()
+	if gredis.Exists(key) {
+		_, err := gredis.Delete(key)
+		if err != nil {
+			logging.Info(err)
+		}
+	}
+
 	return models.EditArticle(a.ID, map[string]interface{}{
 		"tag_id":          a.TagID,
 		"title":           a.Title,
