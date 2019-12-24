@@ -92,6 +92,7 @@ func (t *Tag) GetAll() ([]models.Tag, error) {
 
 func (t *Tag) Export() (string, error) {
 	tags, err := t.GetAll()
+	//fmt.Print("tags is:", tags)
 	if err != nil {
 		return "", err
 	}
@@ -128,10 +129,12 @@ func (t *Tag) Export() (string, error) {
 		}
 	}
 
-	time := strconv.Itoa(int(time.Now().Unix()))
+	//time := strconv.Itoa(int(time.Now().Unix()))
+	time := time.Now().Format("20060102-150405")
 	filename := "tags-" + time + export.EXT
 
 	dirFullPath := export.GetExcelFullPath()
+	// fmt.Print("dirFullPath is:", dirFullPath)
 	err = file.IsNotExistMkDir(dirFullPath)
 	if err != nil {
 		return "", err

@@ -218,7 +218,9 @@ func ExportTag(c *gin.Context) {
 	}
 
 	filename, err := tagService.Export()
+	// fmt.Print("err is:", err) // mkdir : no such file or directory
 	if err != nil {
+		logging.Error(err)
 		appG.Response(http.StatusInternalServerError, e.ERROR_EXPORT_TAG_FAIL, nil)
 		return
 	}
