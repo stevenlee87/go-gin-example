@@ -80,7 +80,7 @@ func (t *Tag) GetAll() ([]models.Tag, error) {
 			return cacheTags, nil
 		}
 	}
-
+	//fmt.Printf("t.PageNum is %d, t.PageSize is %d\n", t.PageNum, t.PageSize)
 	tags, err := models.GetTags(t.PageNum, t.PageSize, t.getMaps())
 	if err != nil {
 		return nil, err

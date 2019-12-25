@@ -212,10 +212,19 @@ func ExportTag(c *gin.Context) {
 		state = com.StrTo(arg).MustInt()
 	}
 
+	pagenum := -1
+	pagenum = com.StrTo(c.Query("pagenum")).MustInt()
+	pagesize := -1
+	pagesize = com.StrTo(c.Query("pagesize")).MustInt()
+
 	tagService := tag_service.Tag{
-		Name:  name,
-		State: state,
+		Name:     name,
+		State:    state,
+		PageSize: pagesize,
+		PageNum:  pagenum,
 	}
+
+	//fmt.Printf("t.PageNum is %d, t.PageSize is %d\n", tagService.PageNum, tagService.PageSize)
 
 	filename, err := tagService.Export()
 	// fmt.Print("err is:", err) // mkdir : no such file or directory

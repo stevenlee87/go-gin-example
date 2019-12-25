@@ -101,7 +101,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	articles, err := articleService.GetAll()
-	fmt.Print("articles is:", articles)
+	//fmt.Print("articles is:", articles)
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR_GET_ARTICLES_FAIL, nil)
 		return
@@ -142,12 +142,14 @@ func AddArticle(c *gin.Context) {
 		form AddArticleForm
 	)
 
+	//fmt.Printf("TagID is %d\n", com.StrTo(c.Query("tag_id")).MustInt())
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {
 		appG.Response(httpCode, errCode, nil)
 		return
 	}
 
+	fmt.Printf("form.TagID is %d,form.Title is %s\n", form.TagID, form.Title)
 	tagService := tag_service.Tag{ID: form.TagID}
 	exists, err := tagService.ExistByID()
 	if err != nil {
