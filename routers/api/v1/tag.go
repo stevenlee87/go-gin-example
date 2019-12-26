@@ -212,8 +212,6 @@ func ExportTag(c *gin.Context) {
 		state = com.StrTo(arg).MustInt()
 	}
 
-	pagenum := -1
-	pagenum = com.StrTo(c.Query("pagenum")).MustInt()
 	pagesize := -1
 	pagesize = com.StrTo(c.Query("pagesize")).MustInt()
 
@@ -221,7 +219,7 @@ func ExportTag(c *gin.Context) {
 		Name:     name,
 		State:    state,
 		PageSize: pagesize,
-		PageNum:  pagenum,
+		PageNum:  util.GetPage(c),
 	}
 
 	//fmt.Printf("t.PageNum is %d, t.PageSize is %d\n", tagService.PageNum, tagService.PageSize)
