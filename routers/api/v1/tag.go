@@ -255,7 +255,43 @@ func ImportTag(c *gin.Context) {
 	}
 
 	tagService := tag_service.Tag{}
-	err = tagService.Import(file)
+	var rows [][]string
+	rows, err = tagService.Import(file)
+	//fmt.Printf("rows is %s\n", rows)
+	if err != nil {
+		logging.Warn(err)
+		appG.Response(http.StatusInternalServerError, e.ERROR_IMPORT_TAG_FAIL, nil)
+		return
+	}
+
+	for irow, row := range rows {
+		if irow > 0 {
+			//fmt.Printf("irow is %d\n", irow)
+			var data []string
+			for _, cell := range row {
+				data = append(data, cell)
+				//fmt.Printf("cell is %#v\n", cell) 循环一次只插入了一个值
+			}
+
+			tagService := tag_service.Tag{
+				Name:      data[1],
+				CreatedBy: data[2],
+				State:     com.StrTo(data[0]).MustInt(),
+			}
+			exists, err := tagService.ExistByName()
+			if err != nil {
+				//fmt.Printf("err is %s", err)
+				appG.Response(http.StatusInternalServerError, e.ERROR_EXIST_TAG_FAIL, nil)
+				return
+			}
+			if exists {
+				appG.Response(http.StatusOK, e.ERROR_EXIST_TAG, data[1])
+				return
+			}
+		}
+	}
+
+	err = tagService.ImportToStore(rows)
 	if err != nil {
 		logging.Warn(err)
 		appG.Response(http.StatusInternalServerError, e.ERROR_IMPORT_TAG_FAIL, nil)

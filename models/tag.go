@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -35,6 +37,7 @@ func AddTag(name string, state int, createdBy string) error {
 		State:     state,
 		CreatedBy: createdBy,
 	}
+
 	if err := db.Create(&tag).Error; err != nil {
 		return err
 	}
@@ -54,6 +57,7 @@ func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 		//fmt.Printf("pageNum is %d, pageSize is %d\n", pageNum, pageSize)
 		err = db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags).Error
 	} else {
+		fmt.Printf("select * from db")
 		err = db.Where(maps).Find(&tags).Error
 	}
 
@@ -82,6 +86,7 @@ func ExistTagByID(id int) (bool, error) {
 		return false, err
 	}
 	if tag.ID > 0 {
+		fmt.Printf("tag.ID is %#v", tag.ID)
 		return true, nil
 	}
 

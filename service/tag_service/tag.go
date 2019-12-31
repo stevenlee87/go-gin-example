@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"time"
 
+	"fmt"
+
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/tealeg/xlsx"
 
@@ -80,7 +82,7 @@ func (t *Tag) GetAll() ([]models.Tag, error) {
 			return cacheTags, nil
 		}
 	}
-	//fmt.Printf("t.PageNum is %d, t.PageSize is %d\n", t.PageNum, t.PageSize)
+	fmt.Printf("t.PageNum is %d, t.PageSize is %d\n", t.PageNum, t.PageSize)
 	tags, err := models.GetTags(t.PageNum, t.PageSize, t.getMaps())
 	if err != nil {
 		return nil, err
@@ -148,13 +150,18 @@ func (t *Tag) Export() (string, error) {
 	return filename, nil
 }
 
-func (t *Tag) Import(r io.Reader) error {
+func (t *Tag) Import(r io.Reader) (rows [][]string, err error) {
 	xlsx, err := excelize.OpenReader(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	rows := xlsx.GetRows("标签信息")
+	rows = xlsx.GetRows("标签信息")
+
+	return rows, nil
+}
+
+func (t *Tag) ImportToStore(rows [][]string) error {
 	for irow, row := range rows {
 		if irow > 0 {
 			var data []string
@@ -165,7 +172,6 @@ func (t *Tag) Import(r io.Reader) error {
 			models.AddTag(data[1], 1, data[2])
 		}
 	}
-
 	return nil
 }
 
