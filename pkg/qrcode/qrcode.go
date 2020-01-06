@@ -3,6 +3,8 @@ package qrcode
 import (
 	"image/jpeg"
 
+	"fmt"
+
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
 
@@ -38,15 +40,16 @@ func NewQrCode(url string, width, height int, level qr.ErrorCorrectionLevel, mod
 
 // GetQrCodePath get save path
 func GetQrCodePath() string {
-	return setting.AppSetting.QrCodeSavePath
+	return setting.AppSetting.QrCodeSavePath // qrcode/
 }
 
 // GetQrCodeFullPath get full save path
 func GetQrCodeFullPath() string {
-	return setting.AppSetting.RuntimeRootPath + setting.AppSetting.QrCodeSavePath
+	return setting.AppSetting.RuntimeRootPath + setting.AppSetting.QrCodeSavePath // runtime/ + qrcode/
 }
 
 // GetQrCodeFullUrl get the full access path
+// http://127.0.0.1:8000 + / + qrcode/ + name
 func GetQrCodeFullUrl(name string) string {
 	return setting.AppSetting.PrefixUrl + "/" + GetQrCodePath() + name
 }
@@ -62,11 +65,21 @@ func (q *QrCode) GetQrCodeExt() string {
 }
 
 // Encode generate QR code
+/*
+这里主要聚焦 func (q *QrCode) Encode 方法，做了如下事情：
+获取二维码生成路径
+创建二维码
+缩放二维码到指定大小
+新建存放二维码图片的文件
+将图像（二维码）以 JPEG 4：2：0 基线格式写入文件
+另外在 jpeg.Encode(f, code, nil) 中，第三个参数可设置其图像质量，默认值为 75
+*/
 func (q *QrCode) Encode(path string) (string, string, error) {
 	name := GetQrCodeFileName(q.URL) + q.GetQrCodeExt()
-	src := path + name
+	src := path + name // /runtime/qrcode/xxx.jpg
 	if file.CheckNotExist(src) == true {
-		code, err := qr.Encode(q.URL, q.Level, q.Mode)
+		code, err := qr.Encode(q.URL, q.Level, q.Mode) // QRCODE_URL M Auto
+		fmt.Printf("code is %v#", code)
 		if err != nil {
 			return "", "", err
 		}

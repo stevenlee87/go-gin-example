@@ -3,15 +3,17 @@ package v1
 import (
 	"net/http"
 
+	"github.com/boombuler/barcode/qr"
+
 	"fmt"
 
 	"github.com/astaxie/beego/validation"
-	"github.com/boombuler/barcode/qr"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
 
 	"github.com/stevenlee87/go-gin-example/pkg/app"
 	"github.com/stevenlee87/go-gin-example/pkg/e"
+	"github.com/stevenlee87/go-gin-example/pkg/logging"
 	"github.com/stevenlee87/go-gin-example/pkg/qrcode"
 	"github.com/stevenlee87/go-gin-example/pkg/setting"
 	"github.com/stevenlee87/go-gin-example/pkg/util"
@@ -295,13 +297,27 @@ func DeleteArticle(c *gin.Context) {
 }
 
 const (
-	QRCODE_URL = "https://github.com/stevenlee87/blog#gin%E7%B3%BB%E5%88%97%E7%9B%AE%E5%BD%95"
+	QRCODE_URL = "https://github.com/stevenlee87/go-gin-example"
 )
+
+//func GenerateArticlePoster(c *gin.Context) {
+//	appG := app.Gin{c}
+//	qrc := qrcode.NewQrCode(QRCODE_URL, 300, 300, qr.M, qr.Auto)
+//	path := qrcode.GetQrCodeFullPath() // runtime/ + qrcode/
+//	_, _, err := qrc.Encode(path)
+//	if err != nil {
+//		appG.Response(http.StatusOK, e.ERROR, nil)
+//		return
+//	}
+//
+//	appG.Response(http.StatusOK, e.SUCCESS, nil)
+//}
 
 func GenerateArticlePoster(c *gin.Context) {
 	appG := app.Gin{C: c}
 	article := &article_service.Article{}
 	qr := qrcode.NewQrCode(QRCODE_URL, 300, 300, qr.M, qr.Auto)
+	// poster-md5name.jpg
 	posterName := article_service.GetPosterFlag() + "-" + qrcode.GetQrCodeFileName(qr.URL) + qr.GetQrCodeExt()
 	articlePoster := article_service.NewArticlePoster(posterName, article, qr)
 	articlePosterBgService := article_service.NewArticlePosterBg(
@@ -321,6 +337,8 @@ func GenerateArticlePoster(c *gin.Context) {
 
 	_, filePath, err := articlePosterBgService.Generate()
 	if err != nil {
+		logging.Warn(err)
+		// [WARN][article.go:326]2020/01/02 18:35:28 [open runtime/fonts/msyhbd.ttc: no such file or directory]
 		appG.Response(http.StatusInternalServerError, e.ERROR_GEN_ARTICLE_POSTER_FAIL, nil)
 		return
 	}

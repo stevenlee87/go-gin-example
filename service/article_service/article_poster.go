@@ -7,6 +7,10 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/stevenlee87/go-gin-example/pkg/logging"
+
+	"fmt"
+
 	"github.com/golang/freetype"
 
 	"github.com/stevenlee87/go-gin-example/pkg/file"
@@ -134,8 +138,9 @@ func (a *ArticlePosterBg) DrawPoster(d *DrawText, fontName string) error {
 }
 
 func (a *ArticlePosterBg) Generate() (string, string, error) {
-	fullPath := qrcode.GetQrCodeFullPath()
+	fullPath := qrcode.GetQrCodeFullPath() // runtime/ + qrcode/
 	fileName, path, err := a.Qr.Encode(fullPath)
+	fmt.Printf("fileName is:%s, path is %s", fileName, path)
 	if err != nil {
 		return "", "", err
 	}
@@ -147,7 +152,7 @@ func (a *ArticlePosterBg) Generate() (string, string, error) {
 		}
 		defer mergedF.Close()
 
-		bgF, err := file.MustOpen(a.Name, path)
+		bgF, err := file.MustOpen(a.Name, path) // bg.jpg + path
 		if err != nil {
 			return "", "", err
 		}
@@ -159,7 +164,7 @@ func (a *ArticlePosterBg) Generate() (string, string, error) {
 		}
 		defer qrF.Close()
 
-		bgImage, err := jpeg.Decode(bgF)
+		bgImage, err := jpeg.Decode(bgF) // Decode reads a JPEG image from r and returns it as an image.Image.
 		if err != nil {
 			return "", "", err
 		}
@@ -168,27 +173,28 @@ func (a *ArticlePosterBg) Generate() (string, string, error) {
 			return "", "", err
 		}
 
-		jpg := image.NewRGBA(image.Rect(a.Rect.X0, a.Rect.Y0, a.Rect.X1, a.Rect.Y1))
+		jpg := image.NewRGBA(image.Rect(a.Rect.X0, a.Rect.Y0, a.Rect.X1, a.Rect.Y1)) // 0 0 550 750
 
 		draw.Draw(jpg, jpg.Bounds(), bgImage, bgImage.Bounds().Min, draw.Over)
-		draw.Draw(jpg, jpg.Bounds(), qrImage, qrImage.Bounds().Min.Sub(image.Pt(a.Pt.X, a.Pt.Y)), draw.Over)
+		draw.Draw(jpg, jpg.Bounds(), qrImage, qrImage.Bounds().Min.Sub(image.Pt(a.Pt.X, a.Pt.Y)), draw.Over) // 125 298
 
 		err = a.DrawPoster(&DrawText{
 			JPG:    jpg,
 			Merged: mergedF,
 
-			Title: "Golang Gin 系列文章",
+			Title: "Golang Gin example",
 			X0:    80,
 			Y0:    160,
 			Size0: 42,
 
-			SubTitle: "---煎鱼",
+			SubTitle: "---stevenlee",
 			X1:       320,
 			Y1:       220,
 			Size1:    36,
 		}, "msyhbd.ttc")
 
 		if err != nil {
+			logging.Warn(err)
 			return "", "", err
 		}
 	}

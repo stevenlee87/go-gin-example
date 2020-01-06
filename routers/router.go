@@ -10,6 +10,7 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	"github.com/stevenlee87/go-gin-example/pkg/export"
+	"github.com/stevenlee87/go-gin-example/pkg/qrcode"
 	"github.com/stevenlee87/go-gin-example/pkg/setting"
 	"github.com/stevenlee87/go-gin-example/pkg/upload"
 	v1 "github.com/stevenlee87/go-gin-example/routers/api/v1"
@@ -25,6 +26,7 @@ func InitRouter() *gin.Engine {
 
 	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
+	r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
 
 	r.GET("/auth", api.GetAuth)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -56,6 +58,8 @@ func InitRouter() *gin.Engine {
 		apiv1.PUT("/articles/:id", v1.EditArticle)
 		//删除指定文章
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
+		//生成文章海报
+		apiv1.POST("/articles/poster/generate", v1.GenerateArticlePoster)
 	}
 
 	return r
